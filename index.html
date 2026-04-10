@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Rock Paper Scissors</title>
+    <style>
+ body {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  animation: fadeIn 1s ease-in;
+}
+
+h1 {
+  color: white;
+  margin-top: 40px;
+  font-size: 42px;
+  letter-spacing: 2px;
+  text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+p {
+  color: #eee;
+  font-size: 18px;
+}
+
+/* Game container */
+.container {
+  background: white;
+  width: 320px;
+  margin: 40px auto;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0px 15px 35px rgba(0,0,0,0.3);
+  transition: transform 0.3s ease;
+}
+
+.container:hover {
+  transform: translateY(-5px);
+}
+
+/* Buttons */
+button {
+  display: block;
+  width: 100%;
+  margin: 12px 0;
+  padding: 14px;
+  font-size: 16px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+/* Individual buttons */
+.rock {
+  background: linear-gradient(45deg, #ff6a6a, #ff3d3d);
+  color: white;
+}
+
+.paper {
+  background: linear-gradient(45deg, #5dade2, #2e86de);
+  color: white;
+}
+
+.scissors {
+  background: linear-gradient(45deg, #55efc4, #00b894);
+  color: black;
+}
+
+.reset {
+  background: linear-gradient(45deg, #2d3436, #000);
+  color: white;
+}
+
+/* Hover effects */
+button:hover {
+  transform: scale(1.07);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+/* Click effect */
+button:active {
+  transform: scale(0.95);
+}
+
+/* Score box */
+.score {
+  margin-top: 20px;
+  font-weight: bold;
+  color: #333;
+  font-size: 18px;
+  padding: 10px;
+  border-radius: 10px;
+  background: #f1f2f6;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Fade animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+  </style>
+
+</head>
+<body>
+  <h1>Rock Paper Scissors</h1>
+  <p>Choose your move:</p>
+
+  <!-- Rock -->
+  <button onclick="
+  playerMove('rock');
+  ">Rock</button>
+
+  <!-- Paper -->
+  <button onclick="
+  playerMove('paper');
+
+  ">Paper</button>
+
+  <!-- Scissors -->
+  <button onclick="
+   playerMove('scissors');
+  ">Scissors</button>
+
+  <button onclick="
+  resetScore();
+  "> Reset score card</button>
+
+  <script>
+    // for the checking the result
+    let Score = JSON.parse(localStorage.getItem('score')) || {
+      wins: 0,
+      losses: 0,
+      Ties: 0
+    };
+
+    function playerMove (playerMove){
+      const computerMove = pickcomputermove();
+
+       let result = '';
+
+       if (playerMove === 'rock'){
+            if (computerMove === 'rock') {
+          result = 'match tie';
+        } else if (computerMove === 'paper') {
+          result = 'computer Win';
+        } else {
+          result = 'you Wins';
+        }
+      }else if (playerMove === 'paper'){
+        if (computerMove === 'rock') {
+          result = 'you Wins';
+        } else if (computerMove === 'paper') {
+          result = 'match tie';
+        } else {
+          result = 'computer Win';
+        }
+      }else if(playerMove === 'scissors'){
+
+        if (computerMove === 'rock') {
+          result = 'computer Win';
+        } else if (computerMove === 'paper') {
+          result = 'you Wins';
+        } else {
+          result = 'match tie';
+        }
+      }
+
+      if(result === 'you Wins'){
+        Score.wins += 1;
+        console.log(Score.wins);
+      }else if (result === 'match tie'){
+        Score.Ties += 1;
+        console.log(Score.Ties);
+      }else if(result === 'computer Win'){
+        Score.losses += 1;
+        console.log(Score.losses);
+      }
+      localStorage.setItem('score', JSON.stringify(Score));
+
+    alert(`You Chose : ${playerMove} . Computer chose : ${computerMove} . Result : ${result}
+    Wins: ${Score.wins}, Losses: ${Score.losses}, Ties: ${Score.Ties}`);
+    }
+
+    // choosing a random move
+    function pickcomputermove() {
+      let computerMove = Math.random();
+
+      if (computerMove < 0.34) {
+        return 'rock';
+      } else if (computerMove <= 0.67) {
+        return 'paper';
+      } else {
+        return 'scissors';
+      }
+    }
+
+    function resetScore(){
+  Score.wins = 0;
+  Score.losses = 0;
+  Score.Ties = 0;
+
+  localStorage.setItem('score', JSON.stringify(Score));
+
+  alert(`Score Reset!
+Wins: ${Score.wins}, Losses: ${Score.losses}, Ties: ${Score.Ties}`);
+}
+  </script>
+</body>
+</html>
