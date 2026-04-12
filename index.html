@@ -2,220 +2,139 @@
 <html lang="en">
 <head>
   <title>Rock Paper Scissors</title>
-    <style>
- body {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  font-family: 'Segoe UI', sans-serif;
-  margin: 0;
-  padding: 0;
-  text-align: center;
-  animation: fadeIn 1s ease-in;
-}
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      font-family: 'Segoe UI', sans-serif;
+      text-align: center;
+      color: white;
+    }
 
-h1 {
-  color: white;
-  margin-top: 40px;
-  font-size: 42px;
-  letter-spacing: 2px;
-  text-shadow: 0 4px 10px rgba(0,0,0,0.3);
-}
+    h1 {
+      margin-top: 40px;
+    }
 
-p {
-  color: #eee;
-  font-size: 18px;
-}
+    .container {
+      background: white;
+      color: black;
+      width: 320px;
+      margin: 40px auto;
+      padding: 30px;
+      border-radius: 20px;
+    }
 
-/* Game container */
-.container {
-  background: white;
-  width: 320px;
-  margin: 40px auto;
-  padding: 30px;
-  border-radius: 20px;
-  box-shadow: 0px 15px 35px rgba(0,0,0,0.3);
-  transition: transform 0.3s ease;
-}
+    button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
 
-.container:hover {
-  transform: translateY(-5px);
-}
+    .rock { background: #ff6a6a; }
+    .paper { background: #5dade2; }
+    .scissors { background: #55efc4; }
+    .reset { background: black; color: white; }
 
-/* Buttons */
-button {
-  display: block;
-  width: 100%;
-  margin: 12px 0;
-  padding: 14px;
-  font-size: 16px;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: bold;
-  letter-spacing: 1px;
-}
-
-/* Individual buttons */
-.rock {
-  background: linear-gradient(45deg, #ff6a6a, #ff3d3d);
-  color: white;
-}
-
-.paper {
-  background: linear-gradient(45deg, #5dade2, #2e86de);
-  color: white;
-}
-
-.scissors {
-  background: linear-gradient(45deg, #55efc4, #00b894);
-  color: black;
-}
-
-.reset {
-  background: linear-gradient(45deg, #2d3436, #000);
-  color: white;
-}
-
-/* Hover effects */
-button:hover {
-  transform: scale(1.07);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-}
-
-/* Click effect */
-button:active {
-  transform: scale(0.95);
-}
-
-/* Score box */
-.score {
-  margin-top: 20px;
-  font-weight: bold;
-  color: #333;
-  font-size: 18px;
-  padding: 10px;
-  border-radius: 10px;
-  background: #f1f2f6;
-  box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
-}
-
-/* Fade animation */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+    .result, .score {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 10px;
+      background: #f1f2f6;
+      color: black;
+      font-weight: bold;
+    }
   </style>
-
 </head>
+
 <body>
+
   <h1>Rock Paper Scissors</h1>
-  <p>Choose your move:</p>
 
-  <!-- Rock -->
-  <button onclick="
-  playerMove('rock');
-  ">Rock</button>
+  <div class="container">
 
-  <!-- Paper -->
-  <button onclick="
-  playerMove('paper');
+    <button class="rock" onclick="playerMove('rock')">Rock</button>
+    <button class="paper" onclick="playerMove('paper')">Paper</button>
+    <button class="scissors" onclick="playerMove('scissors')">Scissors</button>
+    <button class="reset" onclick="resetScore()">Reset Score</button>
 
-  ">Paper</button>
+    <!-- RESULT DISPLAY -->
+    <div class="result" id="result">Play the game!</div>
 
-  <!-- Scissors -->
-  <button onclick="
-   playerMove('scissors');
-  ">Scissors</button>
+    <!-- SCORE DISPLAY -->
+    <div class="score" id="score"></div>
 
-  <button onclick="
-  resetScore();
-  "> Reset score card</button>
+  </div>
 
   <script>
-    // for the checking the result
-    let Score = JSON.parse(localStorage.getItem('score')) || {
+    let score = JSON.parse(localStorage.getItem('score')) || {
       wins: 0,
       losses: 0,
-      Ties: 0
+      ties: 0
     };
 
-    function playerMove (playerMove){
-      const computerMove = pickcomputermove();
+    updateScore();
 
-       let result = '';
+    function playerMove(playerChoice) {
+      const computerMove = pickComputerMove();
+      let result = '';
 
-       if (playerMove === 'rock'){
-            if (computerMove === 'rock') {
-          result = 'match tie';
-        } else if (computerMove === 'paper') {
-          result = 'computer Win';
-        } else {
-          result = 'you Wins';
-        }
-      }else if (playerMove === 'paper'){
-        if (computerMove === 'rock') {
-          result = 'you Wins';
-        } else if (computerMove === 'paper') {
-          result = 'match tie';
-        } else {
-          result = 'computer Win';
-        }
-      }else if(playerMove === 'scissors'){
-
-        if (computerMove === 'rock') {
-          result = 'computer Win';
-        } else if (computerMove === 'paper') {
-          result = 'you Wins';
-        } else {
-          result = 'match tie';
-        }
+      if (playerChoice === 'rock') {
+        if (computerMove === 'rock') result = 'Tie';
+        else if (computerMove === 'paper') result = 'Computer Wins';
+        else result = 'You Win';
       }
 
-      if(result === 'you Wins'){
-        Score.wins += 1;
-        console.log(Score.wins);
-      }else if (result === 'match tie'){
-        Score.Ties += 1;
-        console.log(Score.Ties);
-      }else if(result === 'computer Win'){
-        Score.losses += 1;
-        console.log(Score.losses);
+      else if (playerChoice === 'paper') {
+        if (computerMove === 'rock') result = 'You Win';
+        else if (computerMove === 'paper') result = 'Tie';
+        else result = 'Computer Wins';
       }
-      localStorage.setItem('score', JSON.stringify(Score));
 
-    alert(`You Chose : ${playerMove} . Computer chose : ${computerMove} . Result : ${result}
-    Wins: ${Score.wins}, Losses: ${Score.losses}, Ties: ${Score.Ties}`);
+      else if (playerChoice === 'scissors') {
+        if (computerMove === 'rock') result = 'Computer Wins';
+        else if (computerMove === 'paper') result = 'You Win';
+        else result = 'Tie';
+      }
+
+      // Update score
+      if (result === 'You Win') score.wins++;
+      else if (result === 'Computer Wins') score.losses++;
+      else score.ties++;
+
+      localStorage.setItem('score', JSON.stringify(score));
+
+      // Update UI
+      document.getElementById('result').innerText =
+        `You: ${playerChoice} | Computer: ${computerMove} → ${result}`;
+
+      updateScore();
     }
 
-    // choosing a random move
-    function pickcomputermove() {
-      let computerMove = Math.random();
+    function pickComputerMove() {
+      const random = Math.random();
 
-      if (computerMove < 0.34) {
-        return 'rock';
-      } else if (computerMove <= 0.67) {
-        return 'paper';
-      } else {
-        return 'scissors';
-      }
+      if (random < 1/3) return 'rock';
+      else if (random < 2/3) return 'paper';
+      else return 'scissors';
     }
 
-    function resetScore(){
-  Score.wins = 0;
-  Score.losses = 0;
-  Score.Ties = 0;
+    function updateScore() {
+      document.getElementById('score').innerText =
+        `Wins: ${score.wins} | Losses: ${score.losses} | Ties: ${score.ties}`;
+    }
 
-  localStorage.setItem('score', JSON.stringify(Score));
+    function resetScore() {
+      score = { wins: 0, losses: 0, ties: 0 };
+      localStorage.setItem('score', JSON.stringify(score));
 
-  alert(`Score Reset!
-Wins: ${Score.wins}, Losses: ${Score.losses}, Ties: ${Score.Ties}`);
-}
+      document.getElementById('result').innerText = "Score reset!";
+      updateScore();
+    }
   </script>
+
 </body>
 </html>
